@@ -1,0 +1,16 @@
+{
+    "error_value_nan": "value doit être un nombre (pas NaN)",
+    "error_value_inf": "value doit être un nombre (pas un infini)",
+    "flag_note_template": "{} car --{} a été activé.",
+    "wifi_already_established_template": "La connexion Wi-Fi {!r} est déjà établie.",
+    "reset_anyway": "Elle sera quand même réinitialisée",
+    "user_exit_requested": "Le programme a reçu un ordre d'arrêt.",
+    "no_wifi_established": "Aucune connexion Wi-Fi n'est établie.",
+    "wifi_established_template": "La connexion Wi-Fi {!r} a été établie après {} tentatives.",
+    "cant_establish_template": "Il semblerait que la connexion Wi-Fi n'a pas pu être établie (après {} tentatives).",
+    "note_instant_disconnection": "Cette erreur peut se produire quand une connexion est établie, puis se déconnecte immédiatement.",
+    "restart_failure": "Le redémarrage de NetworkManager a échoué.",
+    "ignored_failure": "Cet échec sera ignoré",
+    "attempts_report_template": "Nombre de tentatives jusqu'ici : {}.",
+    "dry_run_mode": "reload-wifi est en mode \"dry-run\". Aucune commande ne sera invoquée."
+}

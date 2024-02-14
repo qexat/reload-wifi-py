@@ -1,0 +1,19 @@
+[project]
+name = "reload-wifi-py"
+description = "A Python implementation of reload-wifi."
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[[project.authors]]
+name = "Qexat"
+email = "contact@qexat.com"
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+repository = "https://github.com/qexat/reload-wifi-py"
+
+[project.scripts]
+reload-wifi = "reload_wifi_py.__main__:main"
