@@ -64,9 +64,9 @@ class Script:
         exit flag if it is.
         """
 
-        if (uuid := self.get_wifi_uuid()) is not None:
+        if (ssid := self.get_wifi_ssid()) is not None:
             log(
-                LogKind.INFO, MESSAGES["wifi_already_established_template"].format(uuid)
+                LogKind.INFO, MESSAGES["wifi_already_established_template"].format(ssid)
             )
 
             if not self.force:
@@ -105,7 +105,7 @@ class Script:
             log(
                 LogKind.SUCCESS,
                 MESSAGES["wifi_established_template"].format(
-                    self.get_wifi_uuid(),
+                    self.get_wifi_ssid(),
                     self.attempts,
                 ),
             )
@@ -120,25 +120,25 @@ class Script:
 
         self.should_exit = True
 
-    def get_wifi_uuid(self) -> str | None:
+    def get_wifi_ssid(self) -> str | None:
         """
-        Return the current Wi-Fi UUID. If no connection is established, return None.
+        Return the current Wi-Fi SSID. If no connection is established, return None.
         """
 
         if self.dry_run:
             return None
 
         result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)
-        uuid = result.stdout.strip()
+        ssid = result.stdout.strip()
 
-        return uuid if uuid else None
+        return ssid if ssid else None
 
     def is_connection_established(self) -> bool:
         """
-        Return whether a connection is established, i.e. if there is a Wi-FI UUID available.
+        Return whether a connection is established, i.e. if there is a Wi-FI SSID available.
         """
 
-        return self.get_wifi_uuid() is not None
+        return self.get_wifi_ssid() is not None
 
     def restart_nm(self) -> bool:
         """
