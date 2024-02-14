@@ -212,7 +212,7 @@ class Script:
             step()
 
             if self.should_exit:
-                return self.exit_code
+                break
 
         # Should never be reached but static checkers do not know that
         return self.exit_code
