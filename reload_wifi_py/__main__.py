@@ -9,8 +9,9 @@ import subprocess
 import time
 import typing
 
+import pystemd.systemd1 as systemd  # pyright: ignore[reportMissingTypeStubs]
+
 from reload_wifi_py import default
-from reload_wifi_py.config import SUPERUSER
 from reload_wifi_py.logging import flag_note
 from reload_wifi_py.logging import log
 from reload_wifi_py.logging import LogKind
@@ -25,9 +26,13 @@ class Script:
     skip_failures: bool = dataclasses.field(kw_only=True, default=default.SKIP_FAILURES)
     dry_run: bool = dataclasses.field(kw_only=True, default=default.DRY_RUN)
 
+    unit: systemd.Unit = dataclasses.field(init=False)
     attempts: int = dataclasses.field(init=False, default=0)
     should_exit: bool = dataclasses.field(init=False, default=False)
     exit_code: int = dataclasses.field(init=False, default=os.EX_OK)
+
+    def __post_init__(self) -> None:
+        self.unit = systemd.Unit("NetworkManager.service")
 
     @staticmethod
     def parse_args() -> argparse.Namespace:
@@ -74,6 +79,13 @@ class Script:
             if not self.force:
                 self.should_exit = True
 
+    def load_systemd_unit(self) -> None:
+        """
+        If the NetworkManager service will be reset, we load its systemd unit.
+        """
+
+        self.unit.load()
+
     def restart_if_forced(self) -> None:
         """
         Force a restart if the `force` flag is set to `True` and notice the user about it.
@@ -84,6 +96,9 @@ class Script:
                 flag_note(MESSAGES["reset_anyway"], "force")
 
             self.make_attempt()
+
+            if self.should_exit:
+                self.report_conclusion()
 
     def restart_until_established_connection(self) -> None:
         """
@@ -105,25 +120,7 @@ class Script:
             if self.should_exit:
                 break
 
-        if self.is_connection_established():
-            log(
-                LogKind.SUCCESS,
-                MESSAGES["wifi_established_template"].format(
-                    self.get_wifi_ssid(),
-                    self.attempts,
-                ),
-            )
-            self.exit_code = 0
-        else:
-            log(
-                LogKind.ERROR,
-                MESSAGES["cant_establish_template"].format(self.attempts),
-            )
-            log(LogKind.NOTE, MESSAGES["note_instant_disconnection"])
-
-            self.exit_code = 1
-
-        self.should_exit = True
+        self.report_conclusion()
 
     def get_wifi_ssid(self) -> str | None:
         """
@@ -154,7 +151,17 @@ class Script:
             return True
 
         try:
-            proc = subprocess.run([SUPERUSER, "systemctl", "restart", "NetworkManager"])
+            self.unit.Unit.Restart(b"replace")
+
+            # ! PREVENTS A SUBTLE BUG ! #
+            # WHAT: we sleep for a bit to prevent a read/write race.
+            # the program will immediately exit with success if the connection
+            # was already established before, because the function exits
+            # before the underlying restart of the actual service
+            # WHY: if the connection was established, but that the restart
+            # happens to bring it down, the user will be forced to re-execute
+            # reload-wifi again...
+            time.sleep(0.1)
         except KeyboardInterrupt:
             self.should_exit = True
             return False
@@ -162,7 +169,31 @@ class Script:
             if self.attempts == 1:
                 log(LogKind.INFO, MESSAGES["started_restarting"])
 
-            return proc.returncode == 0
+            return True
+
+    def report_conclusion(self) -> None:
+        """
+        Report whether reload-wifi attempts to restore the connection were
+        successful or not, and set the exit code appropriately.
+        """
+
+        if self.is_connection_established():
+            log(
+                LogKind.SUCCESS,
+                MESSAGES["wifi_established_template"].format(
+                    self.get_wifi_ssid(),
+                    self.attempts,
+                ),
+            )
+            self.exit_code = 0
+        else:
+            log(
+                LogKind.ERROR,
+                MESSAGES["cant_establish_template"].format(self.attempts),
+            )
+            log(LogKind.NOTE, MESSAGES["note_instant_disconnection"])
+
+            self.exit_code = 1
 
     def make_attempt(self) -> None:
         """
@@ -213,6 +244,7 @@ class Script:
 
         steps = [
             self.check_wifi_already_established,
+            self.load_systemd_unit,
             self.restart_if_forced,
             self.restart_until_established_connection,
         ]

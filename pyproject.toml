@@ -5,6 +5,8 @@ version = "1.0.0"
 readme = "README.md"
 requires-python = ">=3.10"
 
+dependencies = ["pystemd==0.13.2"]
+
 [[project.authors]]
 name = "Qexat"
 email = "contact@qexat.com"
