@@ -159,6 +159,9 @@ class Script:
             self.should_exit = True
             return False
         else:
+            if self.attempts == 1:
+                log(LogKind.INFO, MESSAGES["started_restarting"])
+
             return proc.returncode == 0
 
     def make_attempt(self) -> None:
