@@ -78,7 +78,9 @@ class Script:
         """
 
         if self.force:
-            flag_note(MESSAGES["reset_anyway"], "force")
+            if self.is_connection_established():
+                flag_note(MESSAGES["reset_anyway"], "force")
+
             self.make_attempt()
 
     def restart_until_established_connection(self) -> None:
