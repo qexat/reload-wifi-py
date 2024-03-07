@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # pyright: reportUnusedCallResult = false
-
 from __future__ import annotations
 
 import argparse
@@ -12,7 +11,9 @@ import typing
 
 from reload_wifi_py import default
 from reload_wifi_py.config import SUPERUSER
-from reload_wifi_py.logging import LogKind, flag_note, log
+from reload_wifi_py.logging import flag_note
+from reload_wifi_py.logging import log
+from reload_wifi_py.logging import LogKind
 from reload_wifi_py.messages import MESSAGES
 from reload_wifi_py.utils import number
 
@@ -66,7 +67,8 @@ class Script:
 
         if (ssid := self.get_wifi_ssid()) is not None:
             log(
-                LogKind.INFO, MESSAGES["wifi_already_established_template"].format(ssid)
+                LogKind.INFO,
+                MESSAGES["wifi_already_established_template"].format(ssid),
             )
 
             if not self.force:
@@ -114,7 +116,8 @@ class Script:
             self.exit_code = 0
         else:
             log(
-                LogKind.ERROR, MESSAGES["cant_establish_template"].format(self.attempts)
+                LogKind.ERROR,
+                MESSAGES["cant_establish_template"].format(self.attempts),
             )
             log(LogKind.NOTE, MESSAGES["note_instant_disconnection"])
 
@@ -181,7 +184,8 @@ class Script:
 
         if self.attempts % 10 == 0:
             log(
-                LogKind.INFO, MESSAGES["attempts_report_template"].format(self.attempts)
+                LogKind.INFO,
+                MESSAGES["attempts_report_template"].format(self.attempts),
             )
 
         if self.is_connection_established():
