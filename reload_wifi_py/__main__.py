@@ -15,6 +15,7 @@ from reload_wifi_py.logging import flag_note
 from reload_wifi_py.logging import log
 from reload_wifi_py.logging import LogKind
 from reload_wifi_py.messages import MESSAGES
+from reload_wifi_py.utils import format_ssid
 from reload_wifi_py.utils import number
 
 
@@ -68,7 +69,7 @@ class Script:
         if (ssid := self.get_wifi_ssid()) is not None:
             log(
                 LogKind.INFO,
-                MESSAGES["wifi_already_established_template"].format(ssid),
+                MESSAGES["wifi_already_established_template"].format(format_ssid(ssid)),
             )
 
             if not self.force:
@@ -84,6 +85,18 @@ class Script:
                 flag_note(MESSAGES["reset_anyway"], "force")
 
             self.make_attempt()
+
+            if self.is_connection_established():
+                ssid = self.get_wifi_ssid()
+                assert ssid is not None
+
+                log(
+                    LogKind.SUCCESS,
+                    MESSAGES["wifi_established_template"].format(
+                        format_ssid(ssid),
+                        self.attempts,
+                    ),
+                )
 
     def restart_until_established_connection(self) -> None:
         """
@@ -106,10 +119,13 @@ class Script:
                 break
 
         if self.is_connection_established():
+            ssid = self.get_wifi_ssid()
+            assert ssid is not None
+
             log(
                 LogKind.SUCCESS,
                 MESSAGES["wifi_established_template"].format(
-                    self.get_wifi_ssid(),
+                    format_ssid(ssid),
                     self.attempts,
                 ),
             )
@@ -129,9 +145,6 @@ class Script:
         """
         Return the current Wi-Fi SSID. If no connection is established, return None.
         """
-
-        if self.dry_run:
-            return None
 
         result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)
         ssid = result.stdout.strip()
