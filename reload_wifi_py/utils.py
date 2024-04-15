@@ -1,6 +1,10 @@
 import math
+import re
 
 from reload_wifi_py.messages import MESSAGES
+
+
+FLAG_PATTERN = re.compile(r"(--[0-9A-Z_a-z]+(-[0-9A-Z_a-z]+)*)")
 
 
 def number(raw_value: str) -> float:
@@ -18,3 +22,19 @@ def number(raw_value: str) -> float:
         raise ValueError(MESSAGES["error_value_inf"])
 
     return value
+
+
+def prettify_flag(message: str) -> str:
+    """
+    Return a copy of `message` where shell flags are in light cyan (ANSI).
+    """
+
+    return re.sub(FLAG_PATTERN, lambda match: f"\x1b[96m{match[0]}\x1b[39m", message)
+
+
+def format_ssid(ssid: str) -> str:
+    """
+    Return a prettier version of the SSID string.
+    """
+
+    return f"\x1b[1m{ssid}\x1b[22m"

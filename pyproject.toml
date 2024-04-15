@@ -1,9 +1,11 @@
 [project]
 name = "reload-wifi-py"
 description = "A Python implementation of reload-wifi."
-version = "1.0.0"
+version = "1.0.1"
 readme = "README.md"
 requires-python = ">=3.10"
+
+dependencies = ["anstrip>=0.1"]
 
 [[project.authors]]
 name = "Qexat"

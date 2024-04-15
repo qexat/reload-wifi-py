@@ -31,6 +31,7 @@ class MessageDictionary(typing.TypedDict):
     user_exit_requested: str
     wifi_already_established_template: str
     wifi_established_template: str
+    too_many_attempts: str
 
 
 def get_file_path(lang: str) -> str:

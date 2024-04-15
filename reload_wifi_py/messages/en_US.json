@@ -2,16 +2,17 @@
   "error_value_nan": "value must be a number (not NaN)",
   "error_value_inf": "value must be a number (not an infinity)",
   "flag_note_template": "{} because --{} has been set.",
-  "wifi_already_established_template": "The Wi-Fi connection to {!r} is already established.",
+  "wifi_already_established_template": "The Wi-Fi connection to {} is already established.",
   "reset_anyway": "It will be reset anyway",
   "user_exit_requested": "The program received a request to stop.",
   "no_wifi_established": "No Wi-Fi connection is established.",
-  "wifi_established_template": "The Wi-Fi connection {!r} has been established after {} attempts.",
-  "cant_establish_template": "It seems that the Wi-Fi connection cannot be established (after {} attempts).",
+  "wifi_established_template": "The Wi-Fi connection {} has been established after {} attempt(s).",
+  "cant_establish_template": "It seems that the Wi-Fi connection cannot be established (after {} attempt(s)).",
   "note_instant_disconnection": "This error can occur when a connection is established, but then immediately disconnects.",
   "restart_failure": "Restarting NetworkManager has failed.",
   "ignored_failure": "This error will be ignored",
   "attempts_report_template": "Number of attempts so far: {}.",
-  "dry_run_mode": "reload-wifi is in dry-run mode. No command will be invoked.",
-  "started_restarting": "The restart of the NetworkManager service has begun."
+  "dry_run_mode": "reload-wifi is in dry-run mode. The NetworkManager service will not be restarted.",
+  "started_restarting": "The restart of the NetworkManager service has begun.",
+  "too_many_attempts": "The maximum number of attempts has been reached."
 }
