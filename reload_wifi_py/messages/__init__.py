@@ -41,11 +41,11 @@ def get_file_path(lang: str) -> str:
     If the language is not supported, return the default.
     """
 
-    dir = os.path.dirname(__file__)
-    path = os.path.join(dir, f"{lang}.json")
+    directory = os.path.dirname(__file__)
+    path = os.path.join(directory, f"{lang}.json")
 
     if not os.path.exists(path):
-        return os.path.join(dir, f"{DEFAULT_LANG}.json")
+        return os.path.join(directory, f"{DEFAULT_LANG}.json")
 
     return path
 

@@ -4,7 +4,7 @@ import re
 from reload_wifi_py.messages import MESSAGES
 
 
-FLAG_PATTERN = re.compile(r"(--[0-9A-Z_a-z]+(-[0-9A-Z_a-z]+)*)")
+FLAG_PATTERN = re.compile(r"(--\w+(-\w+)*)")
 
 
 def number(raw_value: str) -> float:
