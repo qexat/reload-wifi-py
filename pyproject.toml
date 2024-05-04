@@ -5,7 +5,7 @@ version = "1.0.1"
 readme = "README.md"
 requires-python = ">=3.10"
 
-dependencies = ["anstrip>=0.1"]
+dependencies = ["anstrip>=0.2,<0.3"]
 
 [[project.authors]]
 name = "Qexat"
