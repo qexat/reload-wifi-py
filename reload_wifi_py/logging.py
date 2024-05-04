@@ -37,7 +37,7 @@ def get_message(kind: LogKind, message: str) -> str:
 
 def log(kind: LogKind, message: str, *, file: typing.TextIO | None = None) -> None:
     _file = file or kind.value.default_output
-    print(anstrip.auto_strip(get_message(kind, message), output=_file), file=_file)
+    anstrip.print(get_message(kind, message), file=_file)
 
 
 def flag_note(message: str, flag: str, *, file: typing.TextIO | None = None) -> None:
