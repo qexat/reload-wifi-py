@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This is NOT a cron job: this script must be run manually.
 
+![Screenshot](./screenshot.png)
+
 ## Assumptions
 
 - `iwgetid` is available on your system (provided by `wireless-tools`).
